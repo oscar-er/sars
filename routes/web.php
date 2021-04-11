@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'CountryController@viewCountries')->name('countries.home');
+
+
+Route::get('/create', function(){
+    return view('countries.create');
+})->name('countries.create');
+
+
+Route::post('/create/new', 'CountryController@saveCountry')->name('countries.create.new');
