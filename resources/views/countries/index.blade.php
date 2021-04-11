@@ -15,20 +15,21 @@
                 </div>
             </div>
         </div>
-        @if(Session::has('saveAlert'))
+        @if(Session::has('saveAlert') || Session::has('deleteCountry'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{Session::get('saveAlert')}}
+                {{Session::get('deleteCountry')}}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
         <div class="content-table">
-            <table class="table table-striped table-hover text-center">
+                <table class="table table-sm table-striped table-hover text-center">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Country</th>
-                    <th scope="col">Slug</th>
-                    <th scope="col">ISO2</th>
+                    <th>ID</th>
+                    <th>Country</th>
+                    <th>Slug</th>
+                    <th>ISO2</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -39,8 +40,11 @@
                         <th>{{$country->country}}</th>
                         <th>{{$country->slug}}</th>
                         <th>{{$country->iso2}}</th>
+
                         <th>
                             <form action="{{route('countries.delete', $country->id)}}" method="post">
+                                <a href="{{route('countries.edit', $country->id)}}" class="btn btn-outline-success"><i class="fas fa-file"></i> Detalle</a>
+                                <a href="{{route('countries.edit', $country->id)}}" class="btn btn-outline-warning"><i class="fas fa-edit"></i> Editar</a>
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Deseas eliminar el registro?')">
                                     <i class="fas fa-trash"></i> Eliminar

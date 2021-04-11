@@ -18,6 +18,7 @@ class CreateCountriesTable extends Migration
             $table->string('country');
             $table->string('slug');
             $table->string('iso2');
+            $table->timestamps();
         });
     }
 

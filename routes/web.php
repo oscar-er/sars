@@ -30,9 +30,29 @@ Route::post(
 )->name('countries.create.new');
 
 /*
- * @DELETE $id => permite eliminar el registro enviado al método deleteCountry del controlador CountryController
+ * @DELETE $id => elimina el registro enviado al método deleteCountry del controlador CountryController
+ * @param id => id del registro
  */
 Route::delete(
     '/delete/{id}',
     'CountryController@deleteCountry'
 )->name('countries.delete');
+
+
+/*
+ * @return view => retorna la vista del form para editar con relación al método viewEditForm de CountryController
+ * @param id => id del registro
+ */
+Route::get(
+    '/countries/edit/{id}',
+    'CountryController@editCountry'
+)->name('countries.edit');
+
+/*
+ * @PUT $id => actualiza el registro enviado a updateCountry del controlador CoutnryController
+ * @param id => id del registro
+ */
+Route::put(
+    '/contries/edit/data/{id}',
+    'CountryController@updateCountry'
+)->name('countries.update');
