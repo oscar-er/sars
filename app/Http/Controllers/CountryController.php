@@ -10,23 +10,51 @@ use Illuminate\Support\Facades\Session;
 class CountryController extends Controller
 {
     /*
-     *@return view
+     *@return view => retorna la vista index transportando los registros
     */
-    public function viewCountries(){
+    public function viewCountries()
+    {
         $dataCountries = Country::all();
-        return view('countries.index', compact('dataCountries'));
+        return view(
+            'countries.index',
+            compact('dataCountries')
+        );
     }
 
-    public function saveCountry(Request $request){
+    /*
+     * @return view => retorna una redireccion a la ruta 'countries.home'
+     */
+    public function saveCountry(Request $request)
+    {
         $dataCountry = request()->except('_token');
+        // realiza validaciones a los campos del form create  | country | slug | iso2
         $validator = $this->validate($request, [
             'country' => 'required|max:75',
             'slug' => 'required|max:75',
             'iso2' => 'required|max:2'
         ]);
+
         Country::insert($dataCountry);
-        Session::flash('saveAlert', 'El país ' . $dataCountry['country'] . ' se almaceno correctamente');
-        //return $this->viewCountries();
+        // guarda el mensaje saveAlert
+        Session::flash(
+            'saveAlert',
+            'El país ' . $dataCountry['country'] . ' se almaceno correctamente'
+        );
+        return redirect()->route('countries.home');
+    }
+
+
+    /*
+     * @return view => retorna la vista index despues de ejecutar un delete
+     */
+    public function deleteCountry($idCountry){
+
+        Country::destroy($idCountry);
+        // guarda el mensaje deleteCountry
+        Session::flash(
+            'deleteCounty',
+            'El registro del país ' . $idCountry . ' ha sido eliminado correctamente'
+        );
         return redirect()->route('countries.home');
     }
 

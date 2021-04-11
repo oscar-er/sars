@@ -8,7 +8,7 @@
             </div>
             <div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Bucar registros" />
+                    <input type="text" class="form-control" placeholder="Bucar registros"/>
                     <span class="input-group-text" id="basic-addon1">
                         <i class="fas fa-search"></i>
                     </span>
@@ -35,14 +35,17 @@
                 <tbody>
                 @foreach($dataCountries as $country)
                     <tr>
-                        <th>{{$country->idCountry}}</th>
+                        <th>{{$country->id}}</th>
                         <th>{{$country->country}}</th>
                         <th>{{$country->slug}}</th>
                         <th>{{$country->iso2}}</th>
                         <th>
-                            <a href="#" class="btn btn-outline-success"><i class="far fa-file"></i>Detalle</a>
-                            <a href="#" class="btn btn-outline-success"><i class="far fa-file"></i>Editar</a>
-                            <a href="#" class="btn btn-outline-success"><i class="far fa-file"></i>Eliminar</a>
+                            <form action="{{route('countries.delete', $country->id)}}" method="post">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Deseas eliminar el registro?')">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </form>
                         </th>
                     </tr>
                 @endforeach
@@ -51,5 +54,8 @@
         </div>
     </div>
 </main>
+
+
+
 
 @include('countries.layouts.footer')

@@ -2,23 +2,37 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+ * @return view => retorna la vista index a través del método viewCountry del controlador CountryController
+ */
+Route::get(
+    '/',
+    'CountryController@viewCountries'
+)->name('countries.home');
 
-Route::get('/', 'CountryController@viewCountries')->name('countries.home');
+/*
+ * @return view => retorna la vista del formulario create mediante la ruta /craete
+ */
+Route::get(
+    '/create',
+    function(){
+        return view('countries.create');
+    }
+)->name('countries.create');
 
+/*
+ * @POST $data => permite enviar el form al método saveCountry del controlador CountryController
+ */
+Route::post(
+    '/create/new',
+    'CountryController@saveCountry'
+)->name('countries.create.new');
 
-Route::get('/create', function(){
-    return view('countries.create');
-})->name('countries.create');
-
-
-Route::post('/create/new', 'CountryController@saveCountry')->name('countries.create.new');
+/*
+ * @DELETE $id => permite eliminar el registro enviado al método deleteCountry del controlador CountryController
+ */
+Route::delete(
+    '/delete/{id}',
+    'CountryController@deleteCountry'
+)->name('countries.delete');
