@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Http;
+
 
 
 class CountryController extends Controller
 {
+
+
+
     /*
-     * @param request => validacion de la solicitud sobre los textFields
+     * Funcion que valida los datos que el usuario ingresa en los input[type='text']
+     *
+     * @param $request
      */
-    public function validateFields(Request $request){
+    public function validateFields(Request $request)
+    {
         // se valida la solicitud para los campos  country | slug | iso2  |  disponibles en los form de create & update
         $request->validate([
             'country' => 'required|max:75',
@@ -21,10 +29,28 @@ class CountryController extends Controller
         ]);
     }
 
+
+
     /*
-     *@return view => retorna la vista index transportando los registros
+     * Funcion que devuelve la fecha para hacer la busqueda de casos SARS CoV 2 al corte generado a traves de la API
+     *
+     * @return date
+     */
+    public function setDate(){
+        // se declara la zona horaria para America/Mexico
+        date_default_timezone_set('America/Mexico_City');
+        $yestayday = date('d') - 1;
+        return date('Y-m-'.$yestayday).'T00:00:00Z';
+    }
+
+
+
+    /*
+     * Funcion para mostrar la vista index y transportar los registros actuales de la Base de Datos
+     *
+     * @return /view('countries.index')
     */
-    public function viewCountries()
+    public function countryView()
     {
         $dataCountries = Country::all();
         return view(
@@ -33,13 +59,18 @@ class CountryController extends Controller
         );
     }
 
+
+
     /*
-     * @return view => retorna una redireccion a la ruta 'countries.home'
+     * Funcion que guarda los datos recibidos a través de la petición POST al servidor
+     *
+     * @param $request
+     * @return route('countries.home')
      */
-    public function saveCountry(Request $request)
+    public function countrySave(Request $request)
     {
         $dataCountry = request()->except('_token');
-        // realiza la validación invocando al método validateFields
+        // ejecuta la validación de los campos
         $this->validateFields($request);
         Country::insert($dataCountry);
         // guarda el mensaje saveAlert
@@ -52,41 +83,127 @@ class CountryController extends Controller
 
 
     /*
-     * @return view => retorna la vista index despues de ejecutar un delete
+     * Funcion para eliminar los datos del registro encontrado enviado a traves de la peticion DELETE al servidor
+     * solicita como parametro el $id del registro a eliminar
+     *
+     * @param $id
+     * @return route('countries.home')
      */
-    public function deleteCountry($idCountry)
+    public function countryDelete($idCountry)
     {
-        Country::destroy($idCountry);
-        // guarda el mensaje deleteCountry
-        Session::flash(
-            'deleteCountry',
-            'El registro ha sido eliminado correctamente'
-        );
-        return redirect()->route('countries.home');
+        try
+        {
+
+            Country::destroy($idCountry);
+            // guarda el mensaje deleteCountry
+            Session::flash(
+                'deleteCountry',
+                'El registro ha sido eliminado correctamente'
+            );
+            return redirect()->route('countries.home');
+
+        } catch (\Exception $error) {
+
+            return $error->getMessage();
+
+        }
     }
+
 
     /*
-     * @return view => retorna la vista edit
-     * @param id => regristro recibido mediante el route('countries.edit')
+     * Funcion para mostrar la vista edit y transportar los datos del registro almacenados en la DB
+     * solicita como parametro el id del registro que busca para mostrar sus datos
+     *
+     * @param $id
+     * @return view('countries.edit')
      */
-    public function editCountry($id)
+    public function countryEdit($id)
     {
-        $dataCountry = Country::findOrFail($id);
-        return view('countries.edit', compact('dataCountry'));
-    }
+        try
+        {
 
-    public function updateCountry(Request $request, $id)
-    {
-        $dataCountryUpdate = request()->except('_token', '_method');
-        $this->validateFields($request);
-        Country::where('id', '=', $id)->update($dataCountryUpdate);
-        Session::flash(
-            'updateCountry',
-            'El registro se actualizó correctamente'
-        );
-        return redirect()->route('countries.edit', $id);
+            $dataCountry = Country::findOrFail($id);
+            return view('countries.edit', compact('dataCountry'));
+
+        } catch (\Exception $exception) {
+
+            return back();
+
+        }
     }
 
 
+    /*
+     * Funcion para actualizar los datos del registro en la DB
+     * solicita como parametro el id del registro para buscar y ejecutar la actualizacion
+     *
+     * @param $request
+     * @param $id
+     * @return route('countries.edit')
+     */
+    public function countryUpdate(Request $request, $id)
+    {
+        try
+        {
+
+            $dataCountryUpdate = request()->except('_token', '_method');
+            // ejecuta la validadcion de los campos
+            $this->validateFields($request);
+            Country::where('id', '=', $id)->update($dataCountryUpdate);
+            // guarda el mensaje 'updateCountry'
+            Session::flash(
+                'updateCountry',
+                'El registro se actualizó correctamente'
+            );
+            return redirect()->route('countries.edit', $id);
+
+        } catch (\Exception $exception)
+        {
+
+            return back();
+
+        }
+    }
+
+
+
+    /*
+     * Funcion que consulta la API covid19api y permite obtener los casos registrados de SARS-CoV-2 con base al slug
+     * registrado en la base de datos.
+     *
+     * Se solicita la peticion a la API a traves de https://api.covid19api.com/country/{$slug}/status/confirmed
+     *
+     * al obterner los datos se muestra la vista detail y transporta los datos del registro consultado
+     *
+     * @return /view('countries.detail')
+     * @param $id
+     * @param $slug
+     */
+    public function countryDetail($id, $slug)
+    {
+        try
+        {
+            // solicitud a la API
+            $requestAPI = Http::get('https://api.covid19api.com/country/'.$slug.'/status/confirmed');
+            // respuesta almacenada con formato json
+            $response = $requestAPI->json();
+            $responseDB = Country::findOrFail($id);
+            foreach ($response as $item)
+            {
+                if ($item['Date'] == $this->setDate())
+                {
+                    $cases = $item;
+                }
+            }
+
+            return view('countries.detail', compact('responseDB', 'cases'));
+
+        }catch (\Exception $exception)
+        {
+
+            return back();
+
+        }
+    }
 
 }

@@ -43,7 +43,7 @@
 
                         <th>
                             <form action="{{route('countries.delete', $country->id)}}" method="post">
-                                <a href="{{route('countries.edit', $country->id)}}" class="btn btn-outline-success"><i class="fas fa-file"></i> Detalle</a>
+                                <a href="{{route('countries.detail', [$country->id, $country->slug])}}" class="btn btn-outline-success"><i class="fas fa-file"></i> Detalle</a>
                                 <a href="{{route('countries.edit', $country->id)}}" class="btn btn-outline-warning"><i class="fas fa-edit"></i> Editar</a>
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Deseas eliminar el registro?')">
