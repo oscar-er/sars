@@ -31,7 +31,7 @@
                     <div class="mb-3">
                         <label for="slugExample" class="form-label">Casos SARS CoV 2 actual</label>
                         <input type="text" readonly class="form-control" id="slugExample"
-                               value="{{$cases['Cases']}}"/>
+                               value="{{number_format($cases['Cases'])}}"/>
                         <small id="casesHelp" class="form-text text-muted">IMPORTANTE: los casos confirmados son actualizados todos los días a partir de las <b>00:00 hrs</b>
                             . Significa que los casos del día actual serán reflejados hasta las <b>00:00 hrs</b>
                             . del día de mañana.</small>
