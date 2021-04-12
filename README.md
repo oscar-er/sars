@@ -1,4 +1,4 @@
-#CRUD de Países y consulta de casos SARS-CoV-2
+# CRUD de Países y consulta de casos SARS-CoV-2
 
 _El proyecto consiste en crear un CRUD de sus acrónimos (Create | Read | Update | Delete) de países para consultar los casos registrados de SARS-Cov-2 con base al consumo de la API Covid19 
 [consultar más información](https://documenter.getpostman.com/view/10808728/SzS8rjbc#b07f97ba-24f4-4ebe-ad71-97fa35f3b683)._
@@ -10,7 +10,7 @@ _El proyecto consiste en crear un CRUD de sus acrónimos (Create | Read | Update
 <br>
 
 
-##Introducción 📖
+## Introducción 📖
 
 
 Sigue las instrucciones para que puedas tener una réplica del proyecto en funcionamiento en tu máquina local.
@@ -22,7 +22,7 @@ Recuerda que necesitas contar con un entorno de desarrollo ya integrado en tu eq
 Si aún no lo tienes instalado puedes consultar la [documentación oficial](https://www.apachefriends.org/es/index.html) de XAMPP Server donde a detalle te explican como instalar dichas herramientas.
 
 
-####Composer
+#### Composer
 
 <b>Composer</b> nos permite manejar dependencias y librerías para PHP.
 
