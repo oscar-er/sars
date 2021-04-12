@@ -43,7 +43,7 @@ composer global require laravel/installer
 <br>
 <br>
 
-##Descarga y ejecución del proyecto 📂
+## Descarga y ejecución del proyecto 📂
 
 #### Git clone
 Abre una <b>terminal</b> de tu sistema operativo y dirígete a la <b>ruta</b> donde deseas descargar el repositorio y escribimos la siguiente instrucción:
