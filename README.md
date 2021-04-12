@@ -1,4 +1,4 @@
-#CRUD de Países y consulta de casos SARS-CoV-2
+# CRUD de Países y consulta de casos SARS-CoV-2
 
 _El proyecto consiste en crear un CRUD de sus acrónimos (Create | Read | Update | Delete) de países para consultar los casos registrados de SARS-Cov-2 con base al consumo de la API Covid19 
 [consultar más información](https://documenter.getpostman.com/view/10808728/SzS8rjbc#b07f97ba-24f4-4ebe-ad71-97fa35f3b683)._
@@ -10,7 +10,7 @@ _El proyecto consiste en crear un CRUD de sus acrónimos (Create | Read | Update
 <br>
 
 
-##Introducción 📖
+## Introducción 📖
 
 
 Sigue las instrucciones para que puedas tener una réplica del proyecto en funcionamiento en tu máquina local.
@@ -22,14 +22,14 @@ Recuerda que necesitas contar con un entorno de desarrollo ya integrado en tu eq
 Si aún no lo tienes instalado puedes consultar la [documentación oficial](https://www.apachefriends.org/es/index.html) de XAMPP Server donde a detalle te explican como instalar dichas herramientas.
 
 
-####Composer
+#### Composer
 
 <b>Composer</b> nos permite manejar dependencias y librerías para PHP.
 
 _Para su <b>instalación</b> [consulta la documentación oficial](https://getcomposer.org/doc/00-intro.md)._
 
 
-####Laravel
+#### Laravel
 Ya instalado el gestor de dependencias de Composer vamos a instalar <b>Laravel</b>.
 
 Para ello, desde la terminal de tu sistema operativo escribimos la siguiente instrucción:
@@ -45,7 +45,7 @@ composer global require laravel/installer
 
 ##Descarga y ejecución del proyecto 📂
 
-####Git clone
+#### Git clone
 Abre una <b>terminal</b> de tu sistema operativo y dirígete a la <b>ruta</b> donde deseas descargar el repositorio y escribimos la siguiente instrucción:
 
 ````
@@ -53,7 +53,7 @@ git clone https://github.com/oscar-er/sars.git
 ````
 
 
-####Dependencias para PHP
+#### Dependencias para PHP
 
 Gracias a <b>Composer</b> podemos agregar las dependencias para PHP que son necesarias para nuestro proyecto, para ello, debemos cambiar a la ubicación del proyecto desde la terminal y escribir el siguiente comando:
 
@@ -63,7 +63,7 @@ composer install
 
 
 
-####Creación de la Base de Datos
+#### Creación de la Base de Datos
 
 _Recuerda que necesitamos contar con nuestro gestor de base de datos <b>MySQL/MariaDB</b>, para el cual, vamos a crear nuestra DB haciendo uso de nuestro manejador favorito con el siguiente script SQL_
 
@@ -72,7 +72,7 @@ create database `sars` default charset utf8 collate utf8_spanish_ci;
 ````
 
 
-####Sistema de migración de la Base de Datos
+#### Sistema de migración de la Base de Datos
 
 El sistema de migraciones de Laravel nos permite crear fácilmente nuestras tablas en la Base de Datos. 
 
@@ -96,7 +96,7 @@ _<b>IMPORTANTE: recuerda que debes cambiar a la ubicación del proyecto desde la
 
 <br>
 
-####Ejecución de la aplicación
+#### Ejecución de la aplicación
 
 
 Para ejecutar nuestra aplicación desde la terminal vamos a escribir la siguiente instrucción:
@@ -117,7 +117,7 @@ Comienza a realizar tus primeros registros y consulta los casos actuales de Coro
 
 <br>
 
-##Autor 👨‍💻
+## Autor 👨‍💻
 
 * <b>[Oscar Reyes](https://oscarreyes.alwaysdata.net)</b>
 
@@ -126,7 +126,7 @@ Comienza a realizar tus primeros registros y consulta los casos actuales de Coro
 <br>
 <br>
 
-##Desarrollado con
+## Desarrollado con
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
