@@ -7,10 +7,21 @@
                 <a href="{{route('countries.create')}}" class="btn btn-outline-success">Nuevo registro</a>
             </div>
         </div>
+        <!-- Alert success {muestra un mensaje de ejecucion correcta}-->
         @if(Session::has('saveAlert') || Session::has('deleteCountry'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{Session::get('saveAlert')}}
                 {{Session::get('deleteCountry')}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        <!-- Alert danger {muestra un mensaje de ejecucion incorrecta (existe un error)}-->
+        @if(Session::has('notMatches') || Session::has('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>
+                    {{Session::get('notMatches')}}
+                    {{Session::get('error')}}
+                </strong>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif

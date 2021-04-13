@@ -32,15 +32,26 @@ class CountryController extends Controller
 
 
     /*
-     * Funcion que devuelve la fecha para hacer la busqueda de casos SARS CoV 2 al corte generado a traves de la API
+     * Funcion que devuelve la fecha para hacer la busqueda de casos SARS CoV 2 al corte generado a traves de la API.
+     * Esta API solicita un rango de fecha inicial y fecha final para generar el corte y retornar el total de casos.
+     * Para esto, la funcion permite retornar un array asociativo con el rango de fecha inicial y final.
      *
-     * @return date
+     *
+     * @return array
      */
-    public function setDate(){
+    public function setDate()
+    {
         // se declara la zona horaria para America/Mexico
         date_default_timezone_set('America/Mexico_City');
-        $yestayday = date('d') - 1;
-        return date('Y-m-'.$yestayday).'T00:00:00Z';
+        // rango de fecha inicial
+        $day = date('d') - 1;
+        $initialDate = date('Y-m-'.$day).'T00:00:00Z';
+        // rango de fecha final
+        $finalDate = date('Y-m-d').'T00:00:00Z';
+        return [
+            'initialDate' => $initialDate,
+            'finalDate' => $finalDate
+        ];
     }
 
 
@@ -76,7 +87,7 @@ class CountryController extends Controller
         // guarda el mensaje saveAlert
         Session::flash(
             'saveAlert',
-            'El país ' . $dataCountry['country'] . ' se almaceno correctamente'
+            'El país ' . $dataCountry['country'] . ' se almacenó correctamente'
         );
         return redirect()->route('countries.home');
     }
@@ -171,9 +182,10 @@ class CountryController extends Controller
      * Funcion que consulta la API covid19api y permite obtener los casos registrados de SARS-CoV-2 con base al slug
      * registrado en la base de datos.
      *
-     * Se solicita la peticion a la API a traves de https://api.covid19api.com/country/{$slug}/status/confirmed
+     * Se solicita la peticion a la API indicando el rango de fechas para iniciar la busqueda a traves de
+     * https://api.covid19api.com/country/{$slug}/status/confirmed?from={fechaInicial}&to={fechaFinal}
      *
-     * al obterner los datos se muestra la vista detail y transporta los datos del registro consultado
+     * Al obterner los datos se muestra la vista detail y transporta los datos del registro consultado
      *
      * @return /view('countries.detail')
      * @param $id
@@ -183,26 +195,42 @@ class CountryController extends Controller
     {
         try
         {
+            $cases = 0;
+            // rangos de fechas
+            $initialDate = $this->setDate()['initialDate'];
+            $finalDate = $this->setDate()['finalDate'];
             // solicitud a la API
-            $requestAPI = Http::get('https://api.covid19api.com/country/'.$slug.'/status/confirmed');
-            // respuesta almacenada con formato json
+            $requestAPI = Http::get('https://api.covid19api.com/country/' . $slug . '/status/confirmed?from=' .
+                $initialDate . '&to=' . $finalDate);
             $response = $requestAPI->json();
-            $responseDB = Country::findOrFail($id);
-            foreach ($response as $item)
+            // validacion de la respuesta obtenida, si no hay coincidencias de busqueda retorna un mensaje de error
+            if(empty($response['message']))
             {
-                if ($item['Date'] == $this->setDate())
+                // busqueda del pais en la base de datos local
+                $responseDB = Country::findOrFail($id);
+                foreach($response as $item)
                 {
-                    $cases = $item;
+                    if($item['Date'] == $initialDate)
+                    {
+                        $cases += $item['Cases'];
+                    }
                 }
+                return view('countries.detail', compact('responseDB', 'cases'));
+            } else
+            {
+                Session::flash(
+                    'notMatches',
+                    'Ha ocurrido un error. No se encontrarón coincidencias en la busqueda.'
+                );
+                return redirect()->route('countries.home');
             }
-
-            return view('countries.detail', compact('responseDB', 'cases'));
-
         }catch (\Exception $exception)
         {
-
-            return back();
-
+            Session::flash(
+                'error',
+                'Se detecto un error en la petición y la solicitud fue rechazada. Intenta nuevamente.'
+            );
+            return redirect()->route('countries.home');
         }
     }
 
