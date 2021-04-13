@@ -6,7 +6,7 @@ use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
-
+use mysql_xdevapi\Exception;
 
 
 class CountryController extends Controller
@@ -233,5 +233,30 @@ class CountryController extends Controller
             return redirect()->route('countries.home');
         }
     }
+
+
+    /*
+     * Funcion para mostar la vista create.
+     * Si el usuario no conoce los datos de Slug e ISO2 del pais que desea registrar, consulta a la API y devuelve los datos correspondientes
+     *
+     * @return /view('countries.create')
+     */
+    public function countryCreate(){
+        try
+        {
+            // solicitud a la API
+            $requestAPI = Http::get('https://api.covid19api.com/countries');
+            $response = $requestAPI->json();
+            return view('countries.create', compact('response'));
+        } catch (\Exception $exception)
+        {
+            Session::flash(
+                'error',
+                'Se detecto un error en la petición y la solicitud fue rechazada. Intenta nuevamente.'
+            );
+            return redirect()->route('countries.home');
+        }
+    }
+
 
 }

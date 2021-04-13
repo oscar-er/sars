@@ -3,6 +3,10 @@
     list-style: none;
 }
 
+a{
+    text-decoration: none;
+}
+
 nav img{
     width: 12em;
 }
@@ -19,6 +23,11 @@ main.main-container{
 div.container{
     margin-top: 3em;
     border-top: 0.1em solid #cbd5e0;
+}
+
+thead{
+    background-color: #ea5518;
+    line-height: 3;
 }
 
 div.card{

@@ -36,9 +36,7 @@ Route::get(
  */
 Route::get(
     '/create',
-    function(){
-        return view('countries.create');
-    }
+    'CountryController@countryCreate'
 )->name('countries.create');
 
 
